@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
     int total_g = 0, total_v = 0;
 
-        int *list = (int *)malloc(N * sizeof(int));
+    int *list = (int *)malloc(N * sizeof(int));
     int list_size = 0;
 
     for (int i = 0; i < N; i++)
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     fprintf(o, "%d\n", total_v);
     for (int i = 0; i < list_size; i++)
     {
-        fprintf(o, list[i]);
+        fprintf(o, "%d ", list[i]);
     }
 
     free(items);

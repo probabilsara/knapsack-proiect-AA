@@ -71,7 +71,6 @@ int main(int argc, char **argv)
         }
     }
 
-    fprintf(o, "%d\n", best_value);
     for (int i = 0; i < best_size; i++)
         fprintf(o, "%d ", best_sol[i]);
     fprintf(o, "\n");

@@ -43,8 +43,6 @@ int main(int argc, char **argv)
             else
                 dp[i][j] = dp[i - 1][j];
 
-    printf("%d\n", dp[N][G]);
-
     int *list = (int *)malloc(N * sizeof(int));
     int list_size = 0;
 
@@ -72,7 +70,7 @@ int main(int argc, char **argv)
     fprintf(o, "%d\n", dp[N][G]);
     for (int i = 0; i < list_size; i++)
     {
-        fprintf(o, list[i]);
+        fprintf(o, "%d ", list[i]);
     }
 
     free(list);
