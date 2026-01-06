@@ -1,30 +1,47 @@
 CC = gcc
 CFLAGS = -Wall -O2
 
+# Numele executabilelor (țintele) - le păstrăm cu litere mici
 EXEC = greedy backtracking dp
-TESTS = test1 test2 test3
+TESTS = tests/test1.txt
 
-# .PHONY previne erori dacă există fișiere cu numele "all", "run" sau "clean"
 .PHONY: all run clean
 
 all: $(EXEC) run
 
-greedy: greedy.c
-	$(CC) $(CFLAGS) greedy.c -o greedy
+# Regula pentru Greedy (Sursa este Greedy.c cu G mare!)
+greedy: Greedy.c
+	$(CC) $(CFLAGS) Greedy.c -o greedy
 
-backtracking: backtracking.c
-	$(CC) $(CFLAGS) backtracking.c -o backtracking
+# Regula pentru Backtracking (Sursa este Backtracking.c cu B mare!)
+backtracking: Backtracking.c
+	$(CC) $(CFLAGS) Backtracking.c -o backtracking
 
-dp: dp.c
-	$(CC) $(CFLAGS) dp.c -o dp
-
+# Regula pentru DP (Sursa este PD.c !)
+dp: PD.c
+	$(CC) $(CFLAGS) PD.c -o dp
+	
 run: $(EXEC)
-	mkdir -p output
-	# Am schimbat numele fisierelor de output ca sa nu se suprascrie
-	./greedy tests/test1.txt output/greedy_out1.txt
-	./dp tests/test1.txt output/dp_out1.txt
-	./backtracking tests/test1.txt output/back_out1.txt
+	@mkdir -p output
+	
+	@# Rulam programele (cu @ in fata nu se vede comanda in terminal)
+	@./greedy tests/test1.txt output/greedy_out1.txt
+	@./dp tests/test1.txt output/dp_out1.txt
+	@./backtracking tests/test1.txt output/back_out1.txt
+	
+	@# Concatenam rezultatele fara sa afisam nimic pe ecran
+	@echo "Rezultate Greedy:" > output/output1.txt
+	@cat output/greedy_out1.txt >> output/output1.txt
+	
+	@echo "\nRezultate DP:" >> output/output1.txt
+	@cat output/dp_out1.txt >> output/output1.txt
+	
+	@echo "\nRezultate Backtracking:" >> output/output1.txt
+	@cat output/back_out1.txt >> output/output1.txt
 
+	@# Stergem fisierele intermediare
+	@rm output/greedy_out1.txt output/dp_out1.txt output/back_out1.txt
+	
 clean:
 	rm -f greedy backtracking dp
 	rm -rf output
