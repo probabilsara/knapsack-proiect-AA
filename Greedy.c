@@ -3,7 +3,7 @@
 
 typedef struct
 {
-    int w, v, idx;
+    int g, v, idx;
     double ratio;
 } Item;
 
@@ -20,32 +20,36 @@ int cmp(const void *a, const void *b)
 
 int main()
 {
-    int N, G;
-    scanf("%d %d", &N, &G);
 
-    Item items[1000];
+    FILE *f = fopen("tests/test1.txt", "r");
+    int N, G;
+    fscanf(f, "%d %d", &N, &G);
+
+    Item *items = (Item *)malloc(N * sizeof(Item));
     for (int i = 0; i < N; i++)
     {
-        scanf("%d %d", &items[i].w, &items[i].v);
+        fscanf(f, "%d %d", &items[i].g, &items[i].v);
         items[i].idx = i;
-        items[i].ratio = (double)items[i].v / items[i].w;
+        items[i].ratio = (double)items[i].v / items[i].g;
     }
 
     qsort(items, N, sizeof(Item), cmp);
 
-    int total_w = 0, total_v = 0;
-    printf("Solutie greedy:\n");
+    int total_g = 0, total_v = 0;
 
     for (int i = 0; i < N; i++)
     {
-        if (total_w + items[i].w <= G)
+        if (total_g + items[i].g <= G)
         {
-            total_w += items[i].w;
+            total_g += items[i].g;
             total_v += items[i].v;
-            printf("%d ", items[i].idx);
+            printf("itemul de pe pozitia %d  ", items[i].idx);
         }
     }
 
-    printf("\n%d\n", total_v);
+    printf("\nvaloarea totala: %d\n", total_v);
+
+    free(items);
+    fclose(f);
     return 0;
 }
