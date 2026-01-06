@@ -43,7 +43,7 @@ int main()
         {
             total_g += items[i].g;
             total_v += items[i].v;
-            printf("itemul de pe pozitia %d  ", items[i].idx);
+            printf("itemul de pe pozitia\n %d  ", items[i].idx);
         }
     }
 
