@@ -6,9 +6,22 @@ int max(int a, int b)
     return a > b ? a : b;
 }
 
-int main()
+int main(int argc, char **argv)
 {
-    FILE *f = fopen("tests/test1.txt", "r");
+    if (argc != 3)
+    {
+        fprintf(stderr, "Usage: %s input.txt output.txt\n", argv[0]);
+        return 1;
+    }
+
+    FILE *f = fopen(argv[1], "r");
+    FILE *o = fopen(argv[2], "w");
+
+    if (!f || !o)
+    {
+        perror("File error");
+        return 1;
+    }
 
     int N, G;
     fscanf(f, "%d %d", &N, &G);
@@ -32,15 +45,37 @@ int main()
 
     printf("%d\n", dp[N][G]);
 
+    int *list = (int *)malloc(N * sizeof(int));
+    int list_size = 0;
+
     int j = G;
     for (int i = N; i >= 1; i--)
         if (dp[i][j] != dp[i - 1][j])
         {
-            printf("itemul de pe pozitia %d ", i - 1);
+            list[list_size++] = i - 1;
             j -= w[i];
         }
 
-    printf("\n");
+    for (int i = 0; i < list_size - 1; i++)
+    {
+        for (int j = i + 1; j < list_size; j++)
+        {
+            if (list[i] > list[j])
+            {
+                int temp = list[i];
+                list[i] = list[j];
+                list[j] = temp;
+            }
+        }
+    }
+
+    fprintf(o, "%d\n", dp[N][G]);
+    for (int i = 0; i < list_size; i++)
+    {
+        fprintf(o, list[i]);
+    }
+
+    free(list);
 
     for (int i = 0; i <= N; i++)
         free(dp[i]);

@@ -30,10 +30,22 @@ void backtrack(int i, int cw, int cv, int size)
     backtrack(i + 1, cw + w[i], cv + v[i], size + 1);
 }
 
-int main()
+int main(int argc, char **argv)
 {
-    FILE *f = fopen("tests/test1.txt", "r");
+    if (argc != 3)
+    {
+        fprintf(stderr, "Usage: %s input.txt output.txt\n", argv[0]);
+        return 1;
+    }
 
+    FILE *f = fopen(argv[1], "r");
+    FILE *o = fopen(argv[2], "w");
+
+    if (!f || !o)
+    {
+        perror("File error");
+        return 1;
+    }
     fscanf(f, "%d %d", &N, &G);
 
     w = (int *)malloc(N * sizeof(int));
@@ -46,16 +58,30 @@ int main()
 
     backtrack(0, 0, 0, 0);
 
-    printf("%d\n", best_value);
+    for (int i = 0; i < best_size - 1; i++)
+    {
+        for (int j = i + 1; j < best_size; j++)
+        {
+            if (best_sol[i] > best_sol[j])
+            {
+                int temp = best_sol[i];
+                best_sol[i] = best_sol[j];
+                best_sol[j] = temp;
+            }
+        }
+    }
+
+    fprintf(o, "%d\n", best_value);
     for (int i = 0; i < best_size; i++)
-        printf("itemul de pe pozitia %d ", best_sol[i]);
-    printf("\n");
+        fprintf(o, "%d ", best_sol[i]);
+    fprintf(o, "\n");
 
     free(w);
     free(v);
     free(sol);
     free(best_sol);
     fclose(f);
+    fclose(o);
 
     return 0;
 }

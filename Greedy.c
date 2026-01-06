@@ -18,10 +18,22 @@ int cmp(const void *a, const void *b)
     return 0;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc != 3)
+    {
+        fprintf(stderr, "Usage: %s input.txt output.txt\n", argv[0]);
+        return 1;
+    }
 
-    FILE *f = fopen("tests/test1.txt", "r");
+    FILE *f = fopen(argv[1], "r");
+    FILE *o = fopen(argv[2], "w");
+
+    if (!f || !o)
+    {
+        perror("File error");
+        return 1;
+    }
     int N, G;
     fscanf(f, "%d %d", &N, &G);
 
@@ -37,19 +49,41 @@ int main()
 
     int total_g = 0, total_v = 0;
 
+        int *list = (int *)malloc(N * sizeof(int));
+    int list_size = 0;
+
     for (int i = 0; i < N; i++)
     {
         if (total_g + items[i].g <= G)
         {
             total_g += items[i].g;
             total_v += items[i].v;
-            printf("itemul de pe pozitia\n %d  ", items[i].idx);
+            list[list_size++] = items[i].idx;
         }
     }
 
-    printf("\nvaloarea totala: %d\n", total_v);
+    for (int i = 0; i < list_size - 1; i++)
+    {
+        for (int j = i + 1; j < list_size; j++)
+        {
+            if (list[i] > list[j])
+            {
+                int temp = list[i];
+                list[i] = list[j];
+                list[j] = temp;
+            }
+        }
+    }
+
+    fprintf(o, "%d\n", total_v);
+    for (int i = 0; i < list_size; i++)
+    {
+        fprintf(o, list[i]);
+    }
 
     free(items);
+    free(list);
     fclose(f);
+    fclose(o);
     return 0;
 }

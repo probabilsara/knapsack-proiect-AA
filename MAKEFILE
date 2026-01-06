@@ -1,0 +1,30 @@
+CC = gcc
+CFLAGS = -Wall -O2
+
+EXEC = greedy backtracking dp
+TESTS = test1 test2 test3
+
+# .PHONY previne erori dacă există fișiere cu numele "all", "run" sau "clean"
+.PHONY: all run clean
+
+all: $(EXEC) run
+
+greedy: greedy.c
+	$(CC) $(CFLAGS) greedy.c -o greedy
+
+backtracking: backtracking.c
+	$(CC) $(CFLAGS) backtracking.c -o backtracking
+
+dp: dp.c
+	$(CC) $(CFLAGS) dp.c -o dp
+
+run: $(EXEC)
+	mkdir -p output
+	# Am schimbat numele fisierelor de output ca sa nu se suprascrie
+	./greedy tests/test1.txt output/greedy_out1.txt
+	./dp tests/test1.txt output/dp_out1.txt
+	./backtracking tests/test1.txt output/back_out1.txt
+
+clean:
+	rm -f greedy backtracking dp
+	rm -rf output
