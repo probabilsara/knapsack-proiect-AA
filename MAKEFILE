@@ -1,47 +1,45 @@
 CC = gcc
 CFLAGS = -Wall -O2
 
-# Numele executabilelor (țintele) - le păstrăm cu litere mici
 EXEC = greedy backtracking dp
-TESTS = tests/test1.txt
 
 .PHONY: all run clean
 
 all: $(EXEC) run
 
-# Regula pentru Greedy (Sursa este Greedy.c cu G mare!)
 greedy: Greedy.c
 	$(CC) $(CFLAGS) Greedy.c -o greedy
 
-# Regula pentru Backtracking (Sursa este Backtracking.c cu B mare!)
 backtracking: Backtracking.c
 	$(CC) $(CFLAGS) Backtracking.c -o backtracking
 
-# Regula pentru DP (Sursa este PD.c !)
 dp: PD.c
 	$(CC) $(CFLAGS) PD.c -o dp
-	
+
 run: $(EXEC)
 	@mkdir -p output
-	
-	@# Rulam programele (cu @ in fata nu se vede comanda in terminal)
-	@./greedy tests/test1.txt output/greedy_out1.txt
-	@./dp tests/test1.txt output/dp_out1.txt
-	@./backtracking tests/test1.txt output/back_out1.txt
-	
-	@# Concatenam rezultatele fara sa afisam nimic pe ecran
-	@echo "Rezultate Greedy:" > output/output1.txt
-	@cat output/greedy_out1.txt >> output/output1.txt
-	
-	@echo "\nRezultate DP:" >> output/output1.txt
-	@cat output/dp_out1.txt >> output/output1.txt
-	
-	@echo "\nRezultate Backtracking:" >> output/output1.txt
-	@cat output/back_out1.txt >> output/output1.txt
+	@# Iteram prin fiecare fisier .txt din folderul tests
+	@for test in tests/*.txt; do \
+		nume=$$(basename $$test .txt); \
+		\
+		./greedy $$test output/temp_greedy.txt; \
+		./dp $$test output/temp_dp.txt; \
+		./backtracking $$test output/temp_back.txt; \
+		\
+		echo "Rezultate Greedy:" > output/output_$$nume.txt; \
+		cat output/temp_greedy.txt >> output/output_$$nume.txt; \
+		\
+		echo "" >> output/output_$$nume.txt; \
+		echo "Rezultate DP:" >> output/output_$$nume.txt; \
+		cat output/temp_dp.txt >> output/output_$$nume.txt; \
+		\
+		echo "" >> output/output_$$nume.txt; \
+		echo "Rezultate Backtracking:" >> output/output_$$nume.txt; \
+		cat output/temp_back.txt >> output/output_$$nume.txt; \
+		\
+		rm output/temp_greedy.txt output/temp_dp.txt output/temp_back.txt; \
+	done
 
-	@# Stergem fisierele intermediare
-	@rm output/greedy_out1.txt output/dp_out1.txt output/back_out1.txt
-	
 clean:
 	rm -f greedy backtracking dp
 	rm -rf output
